@@ -8,22 +8,22 @@
 
 <div class="game-content">
     <div class="btn-container">
-        <div class="button" 
+        <button 
         id="yellow" 
         :class="{highlight: hlYellow}"
-        @click="userInput(3)"></div>
-        <div class="button" 
+        @click="userInput(3)"></button>
+        <button 
         id="green" 
         :class="{highlight: hlGreen}"
-        @click="userInput(2)"></div>
-        <div class="button" 
+        @click="userInput(2)"></button>
+        <button
         id="red" 
         :class="{highlight: hlRed}"
-        @click="userInput(1)"></div>
-        <div class="button" 
+        @click="userInput(1)"></button>
+        <button 
         id="blue" 
         :class="{highlight: hlBlue}"
-        @click="userInput(4)"></div>
+        @click="userInput(4)"></button>
     </div>
     <div class="game-settings">
       <div class="choose-level">
@@ -42,7 +42,7 @@
       </div>
 
       <div class="start-game">
-        <button @click="playTone(1)">Start</button>
+        <button @click="start">Start</button>
       </div>
     </div>
 
@@ -57,7 +57,8 @@ export default {
       difficulty: "easy",
       started: false, //did the game start
       gamePlay: false, //check if the game make a move
-      allowInput: true,//allow user input
+      allowInput: false,//allow user input
+      isWin: false,
 
       hlRed: false, //highlight for red button when it is in focus
       hlYellow: false, //highlight for yellow button when it is in focus
@@ -98,25 +99,58 @@ export default {
       this.series.push(this.randomTone())
     },
     playSeries() {
+      this.allowInput = false
+      this.gamePlay = true
       let self = this
-      let delay = 1000
+      let delay = 500
       this.series.forEach(function(tone, index, array) {
         if(index == array.length - 1)
           setTimeout(function() {
             if (self.started) {
               self.playTone(tone)
+              self.allowInput = true
+              self.gamePlay = false
             }
           }, delay)
           else
             setTimeout(function() {self.playTone(tone)}, delay)
           delay += 1000
       })      
+      this.gamePlay = false
     },
+
+    clearHighLights() {
+      this.hlRed = false
+      this.hlYellow = false
+      this.hlGreen = false
+      this.hlBlue = false
+    },
+
     userInput(tone){
       if(!this.allowInput)
         return
       this.playTone(tone)
       this.userInputs.push(tone)
+
+      //if user made a mistake
+      if(this.userInputs[this.userInputs.length - 1] != this.series[this.userInputs.length - 1]){
+        this.userInputs = []
+        this.allowInput = false
+        console.log("Wrong :(")
+      }
+      //if this is the last round
+      if (this.userInputs.length == this.series.length) {
+        let self = this
+        this.userInputs = []
+        if (this.series.length == this.roundKol){
+          setTimeout(this.winnerSet, 500)
+        } else {
+          setTimeout(function() {
+            self.addTone()
+            self.playSeries()
+          }, 1000)
+        }
+      }
     },
     playTone(tone){
       switch(tone) {
@@ -145,6 +179,12 @@ export default {
           this.hlBlue = true
           break;
       }
+      if (!this.isWin)
+        setTimeout(this.clearHighLights, 750)
+    },
+    winnerSet() {
+      this.isWin = true
+      console.log("You win!")
     }
   }
   
@@ -173,35 +213,38 @@ export default {
         margin-right: 40px
         margin-left: 40px
 
-        .button
+        button
             width: 100px
             height: 100px
-            border: none
             cursor: pointer           
 
         #red
-            background: #ff5050     
+          background: #ff5050     
             
-            .highlight
-                background: lighten(red, 5%)   
+        #red.highlight
+            background: #8b0000
+            transition: .2s
 
         #green
-            background: #6f9
+          background: #6f9
 
-            .highlight
-                background: lighten(green, 5%)
+        #green.highlight
+          background: green
+          transition: .2s
 
         #yellow
-            background: #ffff44
+          background: #ffff44
 
-            .highlight
-                background: lighten(#ffd700, 5%)
+        #yellow.highlight
+            background: orange
+            transition: .2s
 
         #blue
-            background: #00ccff
+          background: #00ccff
 
-            .highlight
-                background: lighten(#0000cd, 5%)
+        #blue.highlight
+          background: #0000cd
+          transition: .2s
   .game-settings
       
       .choose-level
