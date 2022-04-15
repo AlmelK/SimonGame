@@ -93,7 +93,7 @@ export default {
       hlBlue: false, //highlight for blue button when it is in focus
 
       count: 0,
-      roundKol: 4,
+      roundKol: 20,
 
       series: [],
       userInputs: [],
