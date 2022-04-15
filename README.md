@@ -1,24 +1,11 @@
 # simongame
 
-## Project setup
-```
-npm install
-```
+## Description
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+# Memory game with 4 buttons
+## Rules
+# When you select an easy level, the game plays sounds at a speed of 1.5 seconds and gives you 1.5 seconds to start the turn. 
+# At the average level (normal), 1 second is given, at the complex level (hard) - 0.4 seconds. 
+# Reset button - resets the game. The start button is naturally responsible for starting the game.
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Have a nice time!
